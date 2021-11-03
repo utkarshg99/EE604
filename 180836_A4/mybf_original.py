@@ -1,26 +1,16 @@
 import cv2
 import numpy as np
-import math, sys, time
-import matplotlib.pyplot as plt
-from matplotlib import rcParams
-from PIL import Image
-rcParams['figure.figsize'] = 100 , 100
-rcParams["axes.titlesize"] = 100
-
-rome = cv2.imread('rome.jpg')
-iitk = cv2.imread('iitk.jpg')
-rome = rome[:,:,[2,1,0]]
-iitk = iitk[:,:,[2,1,0]]
-
-kernel_size = 15
-sigma_s = 8
-sigma_r = 0.05
-gKernel = cv2.getGaussianKernel(kernel_size, sigma_s)
-gKernel = np.matmul(gKernel, gKernel.T)/np.sum(gKernel)**2
-base_folder = "bf_outputs"
-fname = f"{base_folder}/kernelSize_{kernel_size}_sigmaR_{sigma_r}_sigmaS_{sigma_s}".replace(".", "_")+".jpg"
+import time
 
 def my_bf(img_org):
+  kernel_size = 51
+  sigma_s = 16
+  sigma_r = 0.075
+  gKernel = cv2.getGaussianKernel(kernel_size, sigma_s)
+  gKernel = np.matmul(gKernel, gKernel.T)/np.sum(gKernel)**2
+  global fname
+  fname = f"{base_folder}/kernelSize_{kernel_size}_sigmaR_{sigma_r}_sigmaS_{sigma_s}".replace(".", "_")+".jpg"
+  
   koff = kernel_size // 2
 
   img = np.zeros((img_org.shape[0] + kernel_size-1, img_org.shape[1] + kernel_size-1, img_org.shape[2]))
@@ -47,13 +37,12 @@ def my_bf(img_org):
 
   return out[koff:img_org.shape[0]+koff,koff:img_org.shape[1]+koff,:]
 
-start_time = time.time()
-r_dash = my_bf(rome)                # change between "rome" and "iitk"
-plt.subplot(121), plt.imshow(rome)  # change between "rome" and "iitk"
-plt.subplot(122), plt.imshow(r_dash)  
-plt.show()
-print(f"Time Taken: {time.time()-start_time} seconds.")
-
-cv2.imwrite(fname, r_dash[:, :, [2, 1, 0]])
-# pil_img = Image.fromarray(r_dash[:, :, [2, 1, 0]])
-# pil_img.save(fname.replace("jpg", "raw"))
+if __name__ == "__main__":
+  img_l = cv2.imread('iitk.jpg')
+  img_l = img_l[:,:,[2,1,0]]
+  base_folder = "bf_outputs"
+  fname = "generic.jpg"
+  start_time = time.time()
+  r_dash = my_bf(img_l)
+  print(f"Time Taken: {time.time()-start_time} seconds.")
+  cv2.imwrite(fname, r_dash[:, :, [2, 1, 0]])

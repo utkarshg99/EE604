@@ -16,7 +16,7 @@ p1 = 10 # parameter deciding filter strength
 p2 = p1 # same as p1, but for colored images
 p3 = 7  # templateWindowSize [Should be odd, recommended: 7]
 p4 = 15 # searchWindowSize [Should be odd, recommended: 21]
-base_folder = "anybf_outputs"
+base_folder = "anyf_outputs"
 fname = f"{base_folder}/h_{p1}_tempWS_{p3}_srchWS_{p4}".replace(".", "_")+".jpg"
 
 start_time = time.time()
